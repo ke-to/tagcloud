@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<style>
+		html,body{padding: 0;margin: 0;}
+		h1{
+			margin: 0;
+			background: #678;
+			color: #fff;
+			font-size: 32px;
+			padding: 10px;
+		}
+	</style>
+</head>
+<body>
+<h1>タグクラウド</h1>
+<script src="http://d3js.org/d3.v3.min.js" charset="utf8"></script>
+<script src="./d3.layout.cloud.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
+<script>
+	
+  var fill = d3.scale.category20();
+  var w = $(window).width();
+  var h = $(window).height();
+  var font = "Hiragino Kaku Gothic Pro";
+
+  var dataset = [];
+  var dataset2 = [];
+    d3.csv('data/ranking.csv', function(csvdata) {
+  for (var i = 0; i < csvdata.length; i++) {
+      dataset.push({size: csvdata[i]['count']*5, text: csvdata[i]['word']});
+      /* textData2.push(csvdata[i]['word']); */
+  };
+  
+/*	  console.log(dataset);
+	  console.log(dataset2);
+*/
+
+/*
+  console.log(textData2);
+*/
+
+  d3.layout.cloud().size([w, h])
+      .words(dataset)
+      .padding(1)
+      .rotate(0)
+      .font(font)
+      .fontSize(function(d) { return d.size; })
+      .on("end", draw)
+      .start();
+      
+
+  function draw(words) {
+    d3.select("body").append("svg")
+        .attr("width", w)
+        .attr("height", h)
+      .append("g")
+        .attr("transform", "translate(" + w/2 + "," + h/2 + ")") //w,hの半分
+      .selectAll("text")
+        .data(words)
+      .enter().append("text")
+        .style("font-size", function(d) { return d.size + "px"; })
+        .style("font-family", font)
+        .style("fill", function(d, i) { return fill(i); })
+        .attr("text-anchor", "middle")
+        .attr("transform", function(d) {
+          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+        })
+        .text(function(d) { return d.text; });
+/*         console.log(words); */
+  }
+});  // end:csv script
+
+
+  
+</script>
+</body>
+</body>

@@ -28,7 +28,7 @@
 
   var dataset = [];
   var dataset2 = [];
-    d3.csv('data/ranking.csv', function(csvdata) {
+    d3.csv('data/honichi.csv', function(csvdata) {
   for (var i = 0; i < csvdata.length; i++) {
       dataset.push({size: csvdata[i]['count']*5, text: csvdata[i]['word']});
       /* textData2.push(csvdata[i]['word']); */

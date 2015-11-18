@@ -28,12 +28,25 @@
 
   var dataset = [];
   var dataset2 = [];
+  var size=[];
     d3.csv('data/honichi.csv', function(csvdata) {
   for (var i = 0; i < csvdata.length; i++) {
-      dataset.push({size: csvdata[i]['count']*5, text: csvdata[i]['word']});
+      dataset2.push(csvdata[i]['word']);
+      size.push(csvdata[i]['count']);
       /* textData2.push(csvdata[i]['word']); */
   };
+  var n = d3.mean(size);
+  var sum = 0;
+  for (var i = 0; i < size.length; i++) {
+	  sum += (size[i]-n)*(size[i]-n);
+  };
+  var variance = sum/size.length;
+  var std = Math.sqrt(variance);
   
+  for (var i = 0; i < size.length; i++) {
+	  console.log(Math.pow(((size[i]-n)/std)*10,2));
+	  dataset.push({text: dataset2[i], size: ((size[i]-n)/std)*10+20}); 
+  };
 /*	  console.log(dataset);
 	  console.log(dataset2);
 */
@@ -44,7 +57,7 @@
 
   d3.layout.cloud().size([w, h])
       .words(dataset)
-      .padding(1)
+      .padding(2)
       .rotate(0)
       .font(font)
       .fontSize(function(d) { return d.size; })
